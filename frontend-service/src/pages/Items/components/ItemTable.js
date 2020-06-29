@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Input, notification, Popconfirm, Form, Row, Col } from 'antd';
+import { Table, Input, notification, Menu, Button, Checkbox, Form, Row, Col, Icon, Dropdown } from 'antd';
 import { query, destroy, update, create } from '../../../services/feeds';
 import AddItemForm from './AddItemForm';
 import style from './style.scss';
@@ -64,7 +64,8 @@ class EditableTable extends React.Component {
     query().then(e => {
       console.log(e);
       this.setState({
-        item: e.data
+        item: e.data,
+        // Checked: e.data
       });
     });
   }
@@ -74,7 +75,8 @@ class EditableTable extends React.Component {
     this.state = {
       data,
       item: [],
-      editingKey: ''
+      editingKey: '',
+      // Checked: []
     };
     this.columns = [
       {
@@ -167,7 +169,8 @@ class EditableTable extends React.Component {
 
   isEditing = record => record.id === this.state.editingKey;
 
-  cancel = () => {
+  cancel = (key) => {
+    if(!this.handleRefesh(key)) return;
     this.setState({ editingKey: '' });
   };
 
@@ -177,7 +180,6 @@ class EditableTable extends React.Component {
         return;
       }
       if(key === 'true'){
-        console.log(row, '180 add');
         create({
           ...row,
       }).then(e => {
@@ -195,19 +197,25 @@ class EditableTable extends React.Component {
   }
 
   delete(form, key){
+    if(!this.handleRefesh(key)) return;
+    destroy({ id: key }).then(e => {
+      this.handleError(e);
+    });
+  }
+
+  handleRefesh = (key) => {
     if(key === 'true'){
       query().then(e => {
         console.log(e);
         this.setState({
           item: e.data,
-          editingKey: ''
+          editingKey: '',
+          // Checked: e.data
         });
       });
-      return;
+      return false;
     }
-    destroy({ id: key }).then(e => {
-      this.handleError(e);
-    });
+    return true;
   }
 
   handleError = (e) => {
@@ -227,7 +235,8 @@ class EditableTable extends React.Component {
       console.log(e);
       this.setState({
         item: e.data,
-        editingKey: ''
+        editingKey: '',
+        // Checked: e.data
       });
     });
   }
@@ -262,8 +271,44 @@ class EditableTable extends React.Component {
     this.setState({ editingKey: key });
   }
 
+  filterHandle = (e) => {
+    const code = e.target.value;
+    const { Checked } = this.state;
+    const listCheckBox = [...Checked];
+    const positionCode = listCheckBox.indexOf(code);
+    if (positionCode === -1) {
+      listCheckBox.push(code);
+    } else {
+      listCheckBox.splice(positionCode, 1);
+    }
+    this.setState({
+      Checked: listCheckBox,
+    });
+  }
+
+  editCheckboxGroup = () => {
+    const { listCompany } = this.state;
+    return (
+      <Menu>
+         {
+            [{
+              code: 1,
+              name: 'minhpro'
+            }].map(company => (
+              <Menu.Item key={company.code}>
+                 <Checkbox onChange={this.filterHandle} defaultChecked value={company.code}>
+                  {` ${company.name}`}
+                 </Checkbox>
+              </Menu.Item>
+            ))
+          }
+      </Menu>
+    );
+  }
+
   render() {
-    console.log(this.state.item);
+    // console.log(this.state.item);
+    // const checkboxGroup = (<this.editCheckboxGroup/>);
     const components = {
       body: {
         cell: EditableCell,
@@ -289,6 +334,11 @@ class EditableTable extends React.Component {
     return (
       <Row type="flex" justify="center" style={{ marginTop: '10px' }} className={style.wrapper}>
         <Col span={24}>
+          {/* <Dropdown overlay={checkboxGroup}>
+              <Button >
+                        <Icon type="filter" /><p style={{ float: 'right', padding: '2px' }}>Filter Category</p>
+              </Button>
+          </Dropdown> */}
           <AddItemForm handleAdd={this.handleAdd}/>
           <EditableContext.Provider value={this.props.form}>
             <Table

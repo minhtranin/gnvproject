@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -ex
-for dbname in feeds
+for dbname in feeds feedstest
 do
     echo "START INIT DATABASE '$dbname'!!!!!!!!!!!"
     psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" --dbname "$POSTGRES_DB" \

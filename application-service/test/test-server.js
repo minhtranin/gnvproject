@@ -1,3 +1,4 @@
+process.env.DB_DATABASE = 'feedstest';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const should = chai.should();
