@@ -26,7 +26,7 @@ create table public.crawler (
 	description text ,
 	link text ,
 	comments text,
-	pubDate text ,
+	pubdate text ,
 	category text,
 	hashtable text
 );

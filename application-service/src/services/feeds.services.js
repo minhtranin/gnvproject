@@ -41,7 +41,7 @@ export async function destroy(payload) {
         if(e !== 0 ) return e;
         throw new Error('id is not existed');
     });
-    return res;
+    return 'successful';
 }
 
 export async function list(params) {

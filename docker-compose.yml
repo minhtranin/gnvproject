@@ -43,31 +43,25 @@ services:
       - ./application-service:/application-service:cached
     working_dir: /application-service/
     restart: unless-stopped
-    ports:
-      - 9000:9000
+    # ports:
+    #   - 9000:9000
     links:
       - db-vng
     depends_on:
       - db-vng
     command: sh -c "npm i --no-optional && npm start ${url}"
-    # command: 
-    #   - npm
-    #   - start
-# front-end service
-# frontend-service:
-#     env_file: .env
-#     image: node:10-alpine
-#     working_dir: /app
-#     command: sh -c "npm i --no-optional && npm run start:dev"
-#     container_name: frontend-service
-#     volumes:
-#       - '../frontend-service:/app:cached'
-#     environment:
-#     - NO_PROXY=true
-# links:
-#   - redis-service
-#   - application-service
-# webserver service
+  frontend-service:
+    env_file: .env
+    image: node:10-alpine
+    working_dir: /frontend-service
+    command: sh -c "npm i --no-optional && npm start"
+    container_name: frontend-service
+    volumes:
+      - './frontend-service:/frontend-service:cached'
+    links:
+      - application-service
+    depends_on:
+      - db-vng
   nginx:
     image: nginx:alpine
     container_name: gateway_container

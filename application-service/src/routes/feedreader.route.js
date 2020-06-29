@@ -8,10 +8,7 @@ const router = Router({ mergeParams: true });
  */
 
 router.get('/', FeedsController('list'));
-router.post('/',(req, res, next) => {
-    console.log(req.body);
-    next()
-}, FeedsController('create'));
+router.post('/', FeedsController('create'));
 router.get('/loadDb',FeedsController('loadDb'));
 router.put('/', FeedsController('update'))
 router.delete('/', FeedsController('destroy'));

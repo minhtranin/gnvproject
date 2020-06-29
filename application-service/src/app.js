@@ -36,7 +36,9 @@ app.use(morgan('dev', {
 // app.use(app.router);
 app.use('/', routes);
 app.use((_, res) => {
-    return res.send(res.data);
+    console.log(res.data);
+    //return ''
+    return res.status(200).send(res.data);
 });
 app.use(errorHandler());
 app.listen(config.port, () => {
