@@ -31,7 +31,10 @@ sudo chmod +x -R ./gnvproject
 ```
     ./loaddb.sh https://feedforall.com/sample-feed.xml, https://feedforall.com/sample.xml
 ```
-
+* at directory gnvproject run test case
+```
+    ./test.sh
+```
 ## How to use?
 * access url `http://localhost:8888/` to get, create, update, delete item
 ## License
