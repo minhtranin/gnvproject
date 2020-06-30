@@ -1,5 +1,5 @@
-MAINTAINER MinhTran
 FROM node:10-alpine
+LABEL maintainer "minhtran.in@outlook.com"
 # Set /app as workdir
 # ARG=$
 WORKDIR /application-service
