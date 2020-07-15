@@ -25,14 +25,16 @@ services:
       POSTGRES_PASSWORD: "root"
 
     #command: sh -c "./docker-entrypoint.sh"
-# use redis for caching
-  # redis-service: #caching
-  #   image: redis
-  #   container_name: redis-container
-  #   ports:
-  #     - '6379:6379'
-  #   environment:
-  #     - ALLOW_EMPTY_PASSWORD=yes
+# use redis for create chanel
+  redis-service: #caching
+    image: redis
+    container_name: redis-container
+    ports:
+      - '6378:6379'
+    volumes:
+      - './application-service/src/config/connect/script.lua:/data/script.lua'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
 # backend service
   application-service:
     env_file: .env
@@ -50,18 +52,18 @@ services:
     depends_on:
       - db-vng
     command: sh -c "npm i --no-optional && npm start ${url}"
-  frontend-service:
-    env_file: .env
-    image: node:10-alpine
-    working_dir: /frontend-service
-    command: sh -c "npm i --no-optional && npm start"
-    container_name: frontend-service
-    volumes:
-      - './frontend-service:/frontend-service:cached'
-    links:
-      - application-service
-    depends_on:
-      - db-vng
+  # frontend-service:
+  #   env_file: .env
+  #   image: node:10-alpine
+  #   working_dir: /frontend-service
+  #   command: sh -c "npm i --no-optional && npm start"
+  #   container_name: frontend-service
+  #   volumes:
+  #     - './frontend-service:/frontend-service:cached'
+  #   links:
+  #     - application-service
+  #   depends_on:
+  #     - db-vng
   nginx:
     image: nginx:alpine
     container_name: gateway_container
