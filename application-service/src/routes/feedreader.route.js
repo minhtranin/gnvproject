@@ -3,7 +3,7 @@ import { Router } from 'express';
 import FeedsController from '../controllers/feeds.controller';
 const router = Router({ mergeParams: true });
 /**
- * @description 
+ * @description
  * @author MinhTran
  */
 

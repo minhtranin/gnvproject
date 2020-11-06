@@ -2,7 +2,6 @@ import { Layout, Menu, Icon } from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 import ItemsTable from './components/ItemTable';
-import AddItemForm from './components/AddItemForm';
 
 const { Header, Sider, Content } = Layout;
 

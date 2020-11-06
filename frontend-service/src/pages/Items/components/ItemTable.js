@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Table, Input, notification, Menu, Button, Checkbox, Form, Row, Col, Icon, Dropdown } from 'antd';
+import { Table, Input, notification, Menu, Checkbox, Form, Row, Col } from 'antd';
 import { query, destroy, update, create } from '../../../services/feeds';
 import AddItemForm from './AddItemForm';
 import style from './style.scss';
@@ -60,7 +60,6 @@ class EditableCell extends React.Component {
 
 class EditableTable extends React.Component {
   componentDidMount() {
-    const { dispatch } = this.props;
     query().then(e => {
       console.log(e);
       this.setState({
@@ -287,7 +286,6 @@ class EditableTable extends React.Component {
   }
 
   editCheckboxGroup = () => {
-    const { listCompany } = this.state;
     return (
       <Menu>
          {
