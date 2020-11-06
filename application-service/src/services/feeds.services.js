@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Redis from 'ioredis';
 import xml from 'xml2js';
 import db from '../models';
 import fs from 'fs';
@@ -95,4 +96,32 @@ async function crawlerData(url) {
             }));
             await db.Crawler.bulkCreate(transform);
     });
+}
+
+export async function producer({ redis }) {
+    const publisher = new Redis({
+        port: '6379',
+        host: 'redis-service',
+        password: ''
+    });
+    const firstdata = {
+        title: 'queue1',
+        description: 'queue1',
+        comments: 'comment',
+        pubdate: 'pubdate',
+        category: 'gate',
+        link: 'linksda',
+        hashtable: 'craw'
+    };
+    publisher.defineCommand('testcommand', {
+        numberOfKeys: 0,
+         lua: `local rcall = redis.call
+         rcall("PUBLISH", "crawler", "convert string")
+         return ARGV[1] .. ""`,
+      });
+      publisher.testcommand("linkedlist for queue", (err, e) => {
+          console.log(e, 'Ss', err);
+      });
+    // publisher.publish('crawler', JSON.stringify(firstdata));
+    return 'redis';
 }

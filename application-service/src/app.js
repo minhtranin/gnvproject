@@ -8,20 +8,44 @@ import routes from './routes';
 import cookieParser from 'cookie-parser';
 import Redis from 'ioredis';
 import config from './config';
+import fs from 'fs';
+import { importDb, workerLoop } from './utils/event';
 
 const app = express();
 
-// const redis = Redis({
-//     port: config.redisPort,
-//     host: config.redisHost,
-//     password: config.redisPass
-// });
+const redis = new Redis({
+    port: config.redisPort,
+    host: config.redisHost,
+    password: config.redisPass
+});
 
-// redis.on('error', (error) => {
-//     console.error(error.message, error);
-//     process.exit(1);
+redis.on('error', (error) => {
+    console.error(error.message, error);
+    process.exit(1);
+});
+app.on('import', importDb);
+
+// redis.monitor(function (err, monitor) {
+//     monitor.on("monitor", function (time, args, source, database) {
+//         console.log(`${new Date()}-${args}-${source}`)
+//     });
+//   });
+
+//   redis.subscribe('crawler');
+  redis.on('message', function(channel, message){
+    // app.emit('import', message);
+    console.log(message);
+  });
+// workerLoop(); loop to check available queue
+// const lua = fs.readFileSync(__dirname + '/../script.lua').toString();
+// redis.defineCommand('testcommand', {
+//   numberOfKeys: 0,
+//    lua,
 // });
-// app.locals.redis = redis;
+// redis.testcommand("linkedlist for queue", (err, e) => {
+//     console.log(e, 'Ss', err);
+// });
+app.locals.redis = redis;
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
