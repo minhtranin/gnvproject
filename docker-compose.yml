@@ -52,18 +52,18 @@ services:
     depends_on:
       - db-vng
     command: sh -c "npm i --no-optional && npm start ${url}"
-  # frontend-service:
-  #   env_file: .env
-  #   image: node:10-alpine
-  #   working_dir: /frontend-service
-  #   command: sh -c "npm i --no-optional && npm start"
-  #   container_name: frontend-service
-  #   volumes:
-  #     - './frontend-service:/frontend-service:cached'
-  #   links:
-  #     - application-service
-  #   depends_on:
-  #     - db-vng
+  frontend-service:
+    env_file: .env
+    image: node:10-alpine
+    working_dir: /frontend-service
+    command: sh -c "npm i --no-optional && npm start"
+    container_name: frontend-service
+    volumes:
+      - './frontend-service:/frontend-service:cached'
+    links:
+      - application-service
+    depends_on:
+      - db-vng
   nginx:
     image: nginx:alpine
     container_name: gateway_container
@@ -83,4 +83,3 @@ services:
       - nginx
       - '-g'
       - daemon off;
-# author MinhTran
